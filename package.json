@@ -65,5 +65,10 @@
     "test": "npm run lint && npm run fast-test",
     "view-cover": "npm run cover -- --report=html && opn ./coverage/index.html"
   },
-  "private": false
+  "files": [
+    "dist/*.js",
+    "dist/*.map",
+    "package.json",
+    "LICENSE"
+  ]
 }
