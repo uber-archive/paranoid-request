@@ -35,6 +35,8 @@ function safeConnectionFunc() {
     // Connect to the resolved IP when we call `sock.connect()` to avoid TOCTOU vulns
     // via DNS rebinding.
     newOptions.host = address;
+    // No-op, since we should already be dealing with an IP.
+    newOptions.lookup = (x) => x;
     args[0] = newOptions;
     if (err) {
       s.destroy(err);

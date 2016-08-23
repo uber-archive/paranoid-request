@@ -23,6 +23,7 @@
 import paranoidHttp from '../http';
 import paranoidHttps from '../https';
 import net from 'net';
+import dns from 'dns';
 import sinon from 'sinon';
 import test from 'tape';
 import paranoid from '../index';
@@ -35,6 +36,29 @@ test('HTTP doesn\'t hit net.createConnection', t => {
   mock.expects('createConnection').never();
   paranoid.get('http://example.com/', {}, (ignoredErr, res, body) => {
     mock.verify();
+    t.end();
+  });
+});
+
+// If `dns.lookup()` is called more than once, it's likely that
+// we're not using the resolved address for the actual connection
+// creating a TOCTOU vuln.
+test('dns.lookup() only called once', function assert(t) {
+  const lookupSpy = sinon.spy(dns, 'lookup');
+  const options = {uri: 'http://example.com/'};
+  paranoid.get(options, function onFirstGet() {
+    dns.lookup.restore();
+    if (semver.gte(process.version, '2.0.0')) {
+      t.true(lookupSpy.calledOnce, 'dns.lookup() called once');
+    } else {
+      // Annoyingly, our manual `socket.connect()` will internally
+      // call `dns.lookup()` on Node < 2.0, but it should be a no-op
+      // with our sanitized IP address.
+      t.true(lookupSpy.calledTwice, 'dns.lookup() called twice');
+      // Make sure the last lookup (for `Socket.connect`) was made with the IP)
+      t.true(net.isIP(lookupSpy.lastCall.args[0]), 'second dns.lookup() called with IP');
+    }
+
     t.end();
   });
 });

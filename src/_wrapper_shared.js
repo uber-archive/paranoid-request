@@ -217,7 +217,7 @@ function safeConnectionWrapper(fn, wrappingSafeConnect) {
       }
     }
     // Call our wrapped `createConnection()`
-    return fn.apply(this, arguments); // eslint-disable-line no-invalid-this
+    return fn.apply(this, args); // eslint-disable-line no-invalid-this
   };
 }
 
