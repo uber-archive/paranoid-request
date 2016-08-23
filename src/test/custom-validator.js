@@ -22,7 +22,6 @@ import async from 'async';
 import extend from 'xtend';
 import test from 'tape';
 import paranoid from '../index';
-import AddrValidator from '../addr_validator';
 import {assertResponse, runRequestWithParams} from './test-utils';
 import {params} from './test-params';
 
@@ -55,7 +54,7 @@ function runCustomValidatorTest(testParams) {
   });
 }
 
-const addrValidator = new AddrValidator({ipBlacklist: [exampleComCIDR]});
+const addrValidator = new paranoid.AddrValidator({ipBlacklist: [exampleComCIDR]});
 
 runCustomValidatorTest({
   name: 'Custom AddrValidator works with request',

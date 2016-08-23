@@ -28,6 +28,7 @@ import request from 'request';
 const isFunction = helpers.isFunction;
 const paramsHaveRequestBody = helpers.paramsHaveRequestBody;
 
+import AddrValidator from './addr_validator';
 import paranoidHttp from './http';
 import paranoidHttps from './https';
 
@@ -147,8 +148,6 @@ function wrapRequestMethod(method, options, requester, verb) {
   };
 }
 
-export default paranoid;
-
 class PatchedRequest extends request.Request {
   constructor(options) {
     if (!options) {
@@ -186,5 +185,10 @@ class PatchedRequest extends request.Request {
   }
 }
 
+paranoid.AddrValidator = AddrValidator;
 paranoid.Request = PatchedRequest;
 paranoid.initParams = initParams;
+paranoid.httpModule = paranoidHttp;
+paranoid.httpsModule = paranoidHttps;
+
+module.exports = paranoid;

@@ -49,4 +49,4 @@ function safeConnectionFunc() {
 }
 
 const connectionFunc = wrapperShared.safeConnectionWrapper(safeConnectionFunc, true);
-export default wrapperShared.safeModuleWrapper(http, connectionFunc);
+module.exports = wrapperShared.safeModuleWrapper(http, connectionFunc);

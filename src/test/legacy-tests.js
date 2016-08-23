@@ -20,8 +20,6 @@
 
 /* globals process */
 
-import paranoidHttp from '../http';
-import paranoidHttps from '../https';
 import net from 'net';
 import dns from 'dns';
 import sinon from 'sinon';
@@ -29,7 +27,6 @@ import test from 'tape';
 import paranoid from '../index';
 
 import semver from 'semver';
-import AddrValidator from '../addr_validator';
 
 test('HTTP doesn\'t hit net.createConnection', t => {
   const mock = sinon.mock(net);
@@ -77,7 +74,7 @@ if (semver.gte(process.version, '0.11.0')) {
   });
 
   test('Paranoid connection pool splits on validator rules', function assert(t) {
-    const addrValidator = new AddrValidator({portWhitelist: [80, 8001]});
+    const addrValidator = new paranoid.AddrValidator({portWhitelist: [80, 8001]});
     const sockConnSpy = sinon.spy(net.Socket.prototype, 'connect');
     const options = {uri: 'http://example.com/', forever: true, addrValidator};
     paranoid.get(options, function onFirstGet() {
@@ -110,7 +107,7 @@ if (semver.gte(process.version, '0.11.0')) {
 // //////
 
 test('Normal hostname HTTP module', t => {
-  const client = paranoidHttp.get('http://example.com/', res => {
+  const client = paranoid.httpModule.get('http://example.com/', res => {
     t.equal(res.statusCode, 200);
     // Necessary or Node 0.10.x will keep the connections open forever
     // and hang the tests. neat.
@@ -120,7 +117,7 @@ test('Normal hostname HTTP module', t => {
 });
 
 test('Normal hostname HTTPS module', t => {
-  const client = paranoidHttps.get('https://example.com/', res => {
+  const client = paranoid.httpsModule.get('https://example.com/', res => {
     t.equal(res.statusCode, 200);
     client.destroy();
     t.end();
@@ -134,7 +131,7 @@ function assertUnacceptableAddressError(t, err) {
 
 test('Blacklisted hostname HTTP module', t => {
   t.plan(2);
-  const client = paranoidHttp.get('http://localhost/', res => {
+  const client = paranoid.httpModule.get('http://localhost/', res => {
     t.fail('Got a response');
     client.destroy();
   }).on('error', err => {
@@ -145,7 +142,7 @@ test('Blacklisted hostname HTTP module', t => {
 
 test('Blacklisted hostname HTTPS module', t => {
   t.plan(2);
-  const client = paranoidHttps.get('https://localhost/', res => {
+  const client = paranoid.httpsModule.get('https://localhost/', res => {
     t.fail('Got a response');
     client.destroy();
   }).on('error', err => {

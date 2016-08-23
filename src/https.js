@@ -20,4 +20,4 @@
 
 import https from 'https';
 import wrapperShared from './_wrapper_shared';
-export default wrapperShared.safeModuleWrapper(https);
+module.exports = wrapperShared.safeModuleWrapper(https);

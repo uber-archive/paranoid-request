@@ -26,4 +26,4 @@ class UnacceptableAddressError extends Error {
   }
 }
 
-export default {UnacceptableAddressError};
+module.exports = {UnacceptableAddressError};

@@ -48,7 +48,6 @@ own version of `paranoid-request`:
 
 ```javascript
 var paranoid = require("paranoid-request");
-var AddrValidator = require("paranoid-request/addr_validator");
 
 // example.com's IP
 var exampleComIp = "93.184.216.34";
@@ -57,7 +56,7 @@ var exampleComIpURL = "http://" + exampleComIp + "/";
 
 // Make a wrapper that blocks example.com's IP by default
 var moreParanoid = paranoid.defaults({
-  addrValidator: new AddrValidator({ipBlacklist: [exampleComCIDR]})
+  addrValidator: new paranoid.AddrValidator({ipBlacklist: [exampleComCIDR]})
 });
 
 // Now requests to example.com's IP should be blocked
@@ -68,8 +67,8 @@ moreParanoid.get(exampleComIpURL, function(err, res, body) {
 ```
 
 You can also use `paranoid-request`'s paranoid wrappers for the stdlib's `http`
-and `https` as well via `require("paranoid-request/http")` and
-`require("paranoid-request/https")`, respectively. However, I don't recommend it.
+and `https` as well via `require("paranoid-request").httpModule` and
+`require("paranoid-request").httpsModule`, respectively. However, I don't recommend it.
 
 ## Testing
 

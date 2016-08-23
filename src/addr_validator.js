@@ -106,4 +106,4 @@ function maybeParseCIDR(ipAddr) {
 // An assortment of common HTTPS? ports.
 AddrValidator.prototype.DEFAULT_PORT_WHITELIST = [80, 8080, 443, 8443, 8000];
 
-export default AddrValidator;
+module.exports = AddrValidator;
