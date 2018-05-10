@@ -156,7 +156,10 @@ function safeConnectionWrapper(fn, wrappingSafeConnect) {
   wrappingSafeConnect = (wrappingSafeConnect || false);
 
   return function safeConnectionWrappedFn() { // eslint-disable-line max-statements
-    const args = net._normalizeConnectArgs(arguments);
+
+    const normalizeArgs = net._normalizeArgs ? net._normalizeArgs : net._normalizeConnectArgs;
+
+    const args = normalizeArgs(arguments);
     const options = args[0];
 
     // We smuggled our validator through localAddress
